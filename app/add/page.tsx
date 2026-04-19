@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Keyboard, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useStore } from "../../store/useStore";
 import { cn } from "../../utils/cn";
 
@@ -48,24 +48,24 @@ export default function AddExpensePage() {
   if (!cycleData) return null;
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 slide-in-from-bottom-5">
-      <header className="flex items-center justify-between">
+    <div className="flex flex-col gap-8 animate-in fade-in duration-500">
+      <header className="flex items-center gap-4">
         <button 
           onClick={() => router.push('/')}
-          className="h-10 w-10 flex items-center justify-center rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+          className="h-10 w-10 flex items-center justify-center rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-primary)] text-[var(--text-secondary)] interactive-tap"
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-bold text-[var(--text-primary)]">Add Transaction</h1>
-        <div className="w-10" />
+        <h1 className="text-xl font-bold">New Entry</h1>
       </header>
 
-      <form onSubmit={handleAdd} className="space-y-10">
-        <div className="space-y-4">
-           <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] px-1">Transaction Amount (₹)</label>
-           <div className="relative rounded-[32px] border border-[var(--border-primary)] bg-[var(--bg-primary)] p-10 flex flex-col items-center justify-center shadow-sm">
-             <div className="flex items-center gap-3">
-               <span className="text-4xl font-bold text-brand-500">₹</span>
+      <form onSubmit={handleAdd} className="flex flex-col gap-8">
+        {/* Amount Input */}
+        <div className="space-y-2">
+           <label className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] pl-1">Amount (₹)</label>
+           <div className="relative rounded-[24px] border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-8 flex flex-col items-center justify-center overflow-hidden">
+             <div className="flex items-center gap-2 w-full justify-center">
+               <span className="text-2xl font-bold text-brand-500 opacity-50">₹</span>
                <input
                 type="number"
                 inputMode="numeric"
@@ -74,64 +74,59 @@ export default function AddExpensePage() {
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
                 autoFocus
-                className="w-full bg-transparent text-6xl font-bold tracking-tight text-[var(--text-primary)] outline-none placeholder:text-[var(--text-secondary)]/20"
+                className="w-full bg-transparent text-5xl font-black tracking-tighter text-[var(--text-primary)] outline-none placeholder:text-[var(--text-secondary)]/10 text-center"
                 required
               />
              </div>
            </div>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] px-1">Classification</h3>
-          <div className="grid grid-cols-2 gap-3">
+        {/* Classification */}
+        <div className="space-y-3">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] pl-1">Classification</h3>
+          <div className="grid grid-cols-2 gap-2">
             {CATEGORIES.map((cat) => {
               const isSelected = category === cat.name;
-
               return (
                 <button
                   type="button"
                   key={cat.name}
                   onClick={() => setCategory(cat.name)}
                   className={cn(
-                    "relative flex items-center gap-4 p-4 rounded-[24px] border transition-all duration-300",
+                    "flex items-center gap-3 p-3.5 rounded-[16px] border transition-all duration-200",
                     isSelected 
                       ? "border-brand-500 bg-brand-500/5 shadow-sm" 
-                      : "border-[var(--border-primary)] bg-[var(--bg-primary)] grayscale opacity-60 hover:opacity-100"
+                      : "border-[var(--border-primary)] bg-[var(--bg-primary)] opacity-60"
                   )}
                 >
-                  <span className="text-2xl">{cat.emoji}</span>
+                  <span className="text-lg">{cat.emoji}</span>
                   <span className={cn(
-                    "text-xs font-bold uppercase tracking-wider transition-all",
+                    "text-[11px] font-bold uppercase tracking-wider",
                     isSelected ? "text-brand-500" : "text-[var(--text-primary)]"
                   )}>{cat.name}</span>
-                  {isSelected && (
-                     <div className="ml-auto text-brand-500">
-                        <Check size={16} strokeWidth={3} />
-                     </div>
-                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] px-1">Footnote</h3>
+        {/* Notes */}
+        <div className="space-y-2">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] pl-1">Note</h3>
           <div className="relative flex items-center">
-            <Keyboard className="absolute left-4 text-[var(--text-secondary)] h-4 w-4" />
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g. Weekly Groceries..."
-              className="w-full rounded-[24px] border border-[var(--border-primary)] bg-[var(--bg-primary)] pl-12 pr-4 py-4 text-sm font-bold text-[var(--text-primary)] outline-none transition-all focus:border-brand-500/30 placeholder:text-[var(--text-secondary)]/30 shadow-sm"
+              placeholder="e.g. Starbucks..."
+              className="w-full rounded-[16px] border border-[var(--border-primary)] bg-[var(--bg-secondary)] px-4 py-4 text-sm font-bold text-[var(--text-primary)] outline-none transition-all focus:border-brand-500"
             />
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-500 py-6 text-white text-sm font-bold uppercase tracking-widest shadow-xl shadow-brand-500/20 hover:bg-brand-600 active:scale-[0.98] transition-all"
+          className="mt-4 w-full rounded-[16px] bg-brand-500 py-5 text-white text-sm font-bold uppercase tracking-widest shadow-lg shadow-brand-500/20 active:scale-[0.98] transition-all"
         >
           Confirm Transaction
         </button>

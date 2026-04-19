@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BottomNav from "../components/BottomNav";
@@ -8,8 +8,16 @@ import ThemeProvider from "../components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Limitr - Control Your Spending",
-  description: "A professional spending companion for intentional capital management.",
+  title: "Limitr",
+  description: "Modern Capital Management",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -19,11 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[var(--bg-primary)]`}>
+      <body className={inter.className}>
         <ThemeProvider>
           <CloudSync />
-          <div className="mx-auto flex min-h-screen w-full max-w-md flex-col relative bg-[var(--bg-primary)] sm:border-x sm:border-[var(--border-primary)] sm:shadow-2xl">
-            <main className="flex-1 px-4 pb-44 pt-10">
+          <div className="mx-auto w-full max-w-md lg:max-w-lg relative bg-[var(--bg-primary)] min-h-screen sm:border-x sm:border-[var(--border-primary)] sm:shadow-2xl">
+            <main className="px-5 pt-8 pb-32">
               {children}
             </main>
             <BottomNav />
