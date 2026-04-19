@@ -52,10 +52,10 @@ export default function HomePage() {
       <div className="flex min-h-[calc(100vh-14rem)] flex-col justify-center animate-in fade-in duration-1000 slide-in-from-bottom-5">
         <section className="mb-10">
           <div className="mb-6 h-1 w-10 bg-brand-500 rounded-full" />
-          <h1 className="text-5xl font-extrabold tracking-tighter text-[var(--text-primary)] leading-[0.85]">
+          <h1 className="text-4xl font-extrabold tracking-tighter text-[var(--text-primary)]">
              LIMITR.
           </h1>
-          <p className="mt-6 text-sm font-medium leading-relaxed text-[var(--text-secondary)]">
+          <p className="mt-4 text-sm font-medium leading-relaxed text-[var(--text-secondary)]">
              A professional-grade spending companion for intentional capital management.
           </p>
         </section>
@@ -114,7 +114,7 @@ export default function HomePage() {
           </div>
           <div>
             <h1 className="text-base font-bold text-[var(--text-primary)] leading-none">Limitr</h1>
-            <p className="mt-1 text-[9px] font-bold text-accent-emerald uppercase tracking-widest">Active Shell</p>
+            <p className="mt-1 text-[9px] font-bold text-brand-500 uppercase tracking-widest">System Operational</p>
           </div>
         </div>
         <Link href="/add" className="h-10 w-10 rounded-full bg-brand-500 text-white flex items-center justify-center shadow-lg shadow-brand-500/30 active:scale-90 transition-transform">
@@ -127,10 +127,10 @@ export default function HomePage() {
            <div className="absolute top-0 right-0 h-24 w-24 bg-brand-500/5 blur-3xl rounded-full -mr-12 -mt-12" />
            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-5">Today's Allowance</p>
            
-           <div className="flex items-baseline gap-1">
-              <span className="text-[10px] font-bold text-[var(--text-secondary)]">₹</span>
+           <div className="flex items-baseline gap-1 break-all justify-center w-full px-2">
+              <span className="text-[12px] font-bold text-[var(--text-secondary)]">₹</span>
               <span className={cn(
-                "text-6xl font-extrabold tracking-tighter leading-none transition-colors",
+                "text-5xl sm:text-6xl font-extrabold tracking-tighter leading-none transition-colors",
                 budget.dailyLimit > 0 ? "text-[var(--text-primary)]" : "text-red-500"
               )}>
                 {formatCurrency(Math.max(0, budget.dailyLimit))}
