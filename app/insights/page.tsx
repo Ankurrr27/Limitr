@@ -4,16 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useStore } from "../../store/useStore";
 import { calculateBudget } from "../../utils/budget";
-import { IndianRupee, PieChart as PieChartIcon, TrendingUp, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { cn } from "../../utils/cn";
+import { PieChart as PieChartIcon } from "lucide-react";
 
-const COLORS = ["#8b5cf6", "#10b981", "#38bdf8", "#f59e0b", "#a1a1aa", "#6366f1"];
+const COLORS = ["#6366f1", "#10b981", "#38bdf8", "#f59e0b", "#a1a1aa", "#ec4899"];
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
     maximumFractionDigits: 0,
   }).format(value);
 }
@@ -21,7 +17,6 @@ function formatCurrency(value: number) {
 export default function InsightsPage() {
   const [mounted, setMounted] = useState(false);
   const { cycleData, expenses } = useStore();
-  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -48,25 +43,27 @@ export default function InsightsPage() {
   if (!mounted || !cycleData || !budget) return null;
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 slide-in-from-bottom-5">
-      <header className="flex items-center justify-between">
+    <div className="space-y-8 animate-in fade-in duration-700 slide-in-from-bottom-5">
+      <header className="flex items-center gap-3">
+        <div className="h-9 w-9 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-500">
+           <PieChartIcon size={18} />
+        </div>
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">Metric Intelligence</p>
-          <h1 className="text-3xl font-black tracking-tight text-white mt-1">ANALYTICS</h1>
+          <h1 className="text-base font-bold text-[var(--text-primary)] leading-none">Analytics</h1>
+          <p className="mt-1 text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest">Resource Matrix</p>
         </div>
       </header>
 
       {budget.currentCycleExpenses.length === 0 ? (
-        <div className="py-24 border border-zinc-900 rounded-[48px] flex flex-col items-center justify-center text-center">
-          <PieChartIcon className="h-12 w-12 text-zinc-800 mb-6" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-700">No Intelligence Data Available</p>
+        <div className="py-24 border border-[var(--border-primary)] rounded-[40px] flex flex-col items-center justify-center text-center bg-[var(--bg-secondary)]">
+          <PieChartIcon className="h-10 w-10 text-[var(--text-secondary)]/20 mb-6" />
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">No Transactions Recorded</p>
         </div>
       ) : (
         <div className="space-y-10">
           <section>
-             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 px-1 mb-6">Distribution Matrix</h3>
-             <div className="relative rounded-[48px] border border-white/[0.04] bg-white/[0.01] p-6 backdrop-blur-3xl overflow-hidden aspect-square">
-                <div className="absolute top-0 right-0 h-24 w-24 bg-brand-500/10 blur-3xl opacity-50" />
+             <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] px-1 mb-6">Distribution</h3>
+             <div className="relative rounded-[40px] border border-[var(--border-primary)] bg-[var(--bg-primary)] p-6 shadow-sm overflow-hidden aspect-square flex flex-col items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -75,21 +72,22 @@ export default function InsightsPage() {
                       cy="50%"
                       innerRadius="65%"
                       outerRadius="90%"
-                      paddingAngle={8}
+                      paddingAngle={5}
                       dataKey="value"
                       stroke="none"
+                      cornerRadius={6}
                     >
                       {categoryData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={12} />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <RechartsTooltip
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="rounded-2xl border border-white/10 bg-black/90 p-3 shadow-2xl backdrop-blur-3xl">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{payload[0].name}</p>
-                              <p className="text-sm font-black text-white">{formatCurrency(Number(payload[0].value))}</p>
+                            <div className="rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-primary)] p-4 shadow-xl">
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] mb-1">{payload[0].name}</p>
+                              <p className="text-sm font-bold text-[var(--text-primary)]">₹{formatCurrency(Number(payload[0].value))}</p>
                             </div>
                           );
                         }
@@ -99,39 +97,39 @@ export default function InsightsPage() {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">Spent</p>
-                   <p className="text-2xl font-black text-white">{formatCurrency(budget.totalSpent)}</p>
+                   <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Spent</p>
+                   <p className="text-2xl font-bold text-[var(--text-primary)]">₹{formatCurrency(budget.totalSpent)}</p>
                 </div>
              </div>
           </section>
 
           <section className="space-y-4 pb-12">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 px-1">Resource allocation</h3>
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] px-1">Allocation Details</h3>
             <div className="space-y-3">
               {categoryData.map((cat, index) => {
                 const percentage = Math.round((cat.value / budget.totalSpent) * 100);
 
                 return (
-                  <div key={cat.name} className="flex items-center justify-between p-4 rounded-[32px] border border-white/[0.04] bg-white/[0.01]">
+                  <div key={cat.name} className="flex items-center justify-between p-4 rounded-[32px] border border-[var(--border-primary)] bg-[var(--bg-primary)] shadow-sm">
                     <div className="flex items-center gap-4">
-                      <div className="h-4 w-4 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.1)]" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                      <div className="h-3 w-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                       <div>
-                        <p className="text-xs font-black text-white uppercase tracking-wider">{cat.name}</p>
-                        <div className="mt-1 flex items-center gap-2">
-                           <div className="w-24 h-1 bg-zinc-900 rounded-full overflow-hidden">
+                        <p className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wide">{cat.name}</p>
+                        <div className="mt-2 flex items-center gap-2">
+                           <div className="w-20 h-1 bg-[var(--bg-secondary)] rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-white transition-all duration-1000" 
+                                className="h-full transition-all duration-1000" 
                                 style={{ 
                                   width: `${percentage}%`,
                                   backgroundColor: COLORS[index % COLORS.length]
                                 }} 
                               />
                            </div>
-                           <span className="text-[9px] font-black text-zinc-600 italic">{percentage}%</span>
+                           <span className="text-[10px] font-bold text-[var(--text-secondary)]">{percentage}%</span>
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm font-black text-white">{formatCurrency(cat.value)}</p>
+                    <p className="text-sm font-bold text-[var(--text-primary)]">₹{formatCurrency(cat.value)}</p>
                   </div>
                 );
               })}

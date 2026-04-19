@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, PieChart, User, PlusCircle } from 'lucide-react';
 import { cn } from '../utils/cn';
-import { useStore } from '../store/useStore';
 
 const navItems = [
   { name: 'Home', path: '/', icon: Home },
@@ -15,7 +14,6 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const theme = useStore((state) => state.theme);
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md pointer-events-none">

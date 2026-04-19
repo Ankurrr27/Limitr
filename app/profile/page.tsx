@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
-import { User, Trash2, ShieldCheck, ChevronRight, Wallet, Moon, Sun, Monitor, LogOut } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { Trash2, ShieldCheck, ChevronRight, Wallet, Moon, Sun } from 'lucide-react';
 
 export default function ProfilePage() {
   const [mounted, setMounted] = useState(false);

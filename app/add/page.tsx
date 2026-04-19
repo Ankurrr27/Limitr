@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Check, Keyboard, ArrowLeft } from "lucide-react";
+import { Check, Keyboard, ArrowLeft } from "lucide-react";
 import { useStore } from "../../store/useStore";
 import { cn } from "../../utils/cn";
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { AlertCircle, IndianRupee, PieChart as PieChartIcon, Trash2, Calendar, LayoutDashboard, PlusCircle } from "lucide-react";
+import { PieChart as PieChartIcon, Trash2, LayoutDashboard, PlusCircle } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { calculateBudget } from "../utils/budget";
 import { cn } from "../utils/cn";
