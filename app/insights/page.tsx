@@ -6,8 +6,6 @@ import { useStore } from "../../store/useStore";
 import { calculateBudget } from "../../utils/budget";
 import { PieChart as PieChartIcon } from "lucide-react";
 
-const COLORS = ["#6366f1", "#10b981", "#38bdf8", "#f59e0b", "#a1a1aa", "#ec4899"];
-
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
     maximumFractionDigits: 0,
@@ -16,11 +14,16 @@ function formatCurrency(value: number) {
 
 export default function InsightsPage() {
   const [mounted, setMounted] = useState(false);
-  const { cycleData, expenses } = useStore();
+  const { cycleData, expenses, categories } = useStore();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const getCategoryColor = (name: string) => {
+    const cat = categories.find(c => c.name === name);
+    return cat?.color || '#64748b';
+  };
 
   const budget = useMemo(() => {
     if (!cycleData) return null;
@@ -43,7 +46,7 @@ export default function InsightsPage() {
   if (!mounted || !cycleData || !budget) return null;
 
   return (
-    <div className="flex flex-col gap-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-500">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
         <p className="mt-1 text-sm text-[var(--text-secondary)] font-medium">Resource Distribution</p>
@@ -55,8 +58,8 @@ export default function InsightsPage() {
           <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">No Transactions Recorded</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-10">
-          <section className="relative aspect-square w-full rounded-[40px] border border-[var(--border-primary)] bg-[var(--bg-secondary)] p-6 shadow-sm flex flex-col items-center justify-center">
+        <div className="flex flex-col gap-8">
+          <section className="relative aspect-square w-full flex flex-col items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -70,8 +73,8 @@ export default function InsightsPage() {
                   stroke="none"
                   cornerRadius={6}
                 >
-                  {categoryData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {categoryData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={getCategoryColor(entry.name)} />
                   ))}
                 </Pie>
                 <RechartsTooltip
@@ -90,39 +93,42 @@ export default function InsightsPage() {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Total Spent</p>
-               <p className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">₹{formatCurrency(budget.totalSpent)}</p>
+               <p className="text-[9px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Total Spent</p>
+               <p className="text-2xl font-black text-[var(--text-primary)] tracking-tighter">₹{formatCurrency(budget.totalSpent)}</p>
             </div>
           </section>
 
-          <section className="flex flex-col gap-3 pb-10">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] pl-1">Allocation Details</h3>
-            {categoryData.map((cat, index) => {
-              const percentage = Math.round((cat.value / budget.totalSpent) * 100);
-              return (
-                <div key={cat.name} className="flex items-center justify-between p-4 rounded-[20px] bg-[var(--bg-primary)] border border-[var(--border-primary)] shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                    <div>
-                      <p className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wide">{cat.name}</p>
-                      <div className="mt-2 flex items-center gap-2">
-                         <div className="w-20 h-1 bg-[var(--bg-secondary)] rounded-full overflow-hidden">
-                            <div 
-                              className="h-full transition-all duration-1000" 
-                              style={{ 
-                                width: `${percentage}%`,
-                                backgroundColor: COLORS[index % COLORS.length]
-                              }} 
-                            />
-                         </div>
-                         <span className="text-[10px] font-bold text-[var(--text-secondary)]">{percentage}%</span>
+          <section className="flex flex-col gap-2 pb-10">
+            <h3 className="text-[9px] font-bold uppercase tracking-widest text-[var(--text-secondary)] pl-2">Allocation Details</h3>
+            <div className="flex flex-col">
+              {categoryData.map((cat) => {
+                const percentage = Math.round((cat.value / budget.totalSpent) * 100);
+                const color = getCategoryColor(cat.name);
+                return (
+                  <div key={cat.name} className="flex items-center justify-between py-3 border-b border-[var(--border-primary)] last:border-0 -mx-2 px-2">
+                    <div className="flex items-center gap-3">
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                      <div>
+                        <p className="text-[10px] font-bold text-[var(--text-primary)] uppercase tracking-wide">{cat.name}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                           <div className="w-16 h-1 bg-[var(--bg-secondary)] rounded-full overflow-hidden">
+                              <div 
+                                className="h-full transition-all duration-1000" 
+                                style={{ 
+                                  width: `${percentage}%`,
+                                  backgroundColor: color
+                                }} 
+                              />
+                           </div>
+                           <span className="text-[10px] font-bold text-[var(--text-secondary)]">{percentage}%</span>
+                        </div>
                       </div>
                     </div>
+                    <p className="text-sm font-bold text-[var(--text-primary)]">₹{formatCurrency(cat.value)}</p>
                   </div>
-                  <p className="text-sm font-bold text-[var(--text-primary)]">₹{formatCurrency(cat.value)}</p>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </section>
         </div>
       )}

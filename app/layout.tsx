@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BottomNav from "../components/BottomNav";
+import SideNav from "../components/SideNav";
 import CloudSync from "../components/CloudSync";
 import ThemeProvider from "../components/ThemeProvider";
+import LayoutClient from "./LayoutClient";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,12 +32,17 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <CloudSync />
-          <div className="mx-auto w-full max-w-md lg:max-w-lg relative bg-[var(--bg-primary)] min-h-screen sm:border-x sm:border-[var(--border-primary)] sm:shadow-2xl">
-            <main className="px-5 pt-8 pb-32">
-              {children}
-            </main>
-            <BottomNav />
-          </div>
+          <LayoutClient>
+            <div className="flex min-h-screen bg-[var(--bg-primary)]">
+              <SideNav />
+              <div className="flex-1 w-full mx-auto max-w-md md:max-w-4xl relative sm:border-x sm:border-[var(--border-primary)] sm:shadow-2xl md:border-none md:shadow-none bg-[var(--bg-primary)] min-h-screen pb-[64px] md:pb-0">
+                <main className="px-5 pt-8 pb-10 md:p-8">
+                  {children}
+                </main>
+              </div>
+              <BottomNav />
+            </div>
+          </LayoutClient>
         </ThemeProvider>
       </body>
     </html>
